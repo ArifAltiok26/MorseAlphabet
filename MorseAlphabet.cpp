@@ -155,14 +155,13 @@ MorseTree init_morse_alphabet() {
 }
 
 void demo(const MorseTree& m_tree) {
-	std::string input = "This is is a test text. 1234567890";
+	std::string input = "This is a test text. 1234567890";
 	std::cout << "Input: " << input << std::endl;
 	std::cout << std::endl;
 	std::string encode_str = m_tree.encode(input);
 	std::cout << "Encoding result: " << encode_str << std::endl;
 	std::cout << std::endl;
 	std::cout << "Decoding result: " << m_tree.decode(encode_str) << std::endl;
-	std::cin.ignore();
 }
 
 void mainloop(const MorseTree& m_tree) {
