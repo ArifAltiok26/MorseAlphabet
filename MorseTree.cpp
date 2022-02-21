@@ -1,5 +1,5 @@
 #include "MorseTree.h"
-
+#include <exception>
 MorseTree::MorseTree() {
 	this->root = new Node;
 }
@@ -49,8 +49,8 @@ std::string MorseTree::decode(std::string sentence) const{
 	std::string retval;
 	Node* temp = root;
 	for (size_t i = 0; i < sentence.length(); i++) {
-		if (!temp)
-			throw "Invalid character in Morse Alphabet for decoding";
+		if (temp == NULL)
+			throw std::exception("Invalid character in Morse Alphabet for decoding");
 		if (sentence[i] == ' ') {
 			retval += temp->c;
 			temp = root;
