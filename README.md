@@ -4,6 +4,7 @@
 
 The Huffman tree is a tree data structure from which we can build on the above approach.
 
+![huffman_tree](https://user-images.githubusercontent.com/90797520/155209243-f6277409-4db8-4fc1-b97f-7a2d5de3cad7.jpg)
 
 To get the executable of the application, clone the repo and run the build.bat file. The executable will be under Build/Release.
 
