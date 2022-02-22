@@ -1,6 +1,6 @@
 # What is MorseAlphabet ?
 
-# MorseAlphabet is an approach that encodes or decodes texts using periods or dashes.
+MorseAlphabet is an approach that encodes or decodes texts using periods or dashes.
 
 The Huffman tree is a tree data structure from which we can build on the above approach.
 
