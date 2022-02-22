@@ -2,15 +2,18 @@
 #include <string>
 #include <conio.h>
 #include "MorseTree.h"
+#include "windows.h"
 
 void help();
 MorseTree init_morse_alphabet();
 void demo(const MorseTree& m_tree);
 void mainloop(const MorseTree& m_tree);
+void beep();
+void play(const std::string& encoding_value);
 
 int main(int argc, char** argv)
 {
-
+	bool is_play=false;
 	if (argc == 1 || (argc == 2 && strcmp("--help", argv[1]) == 0))
 		help();
 	else {
@@ -24,12 +27,16 @@ int main(int argc, char** argv)
 		}
 		if (argc == 2) {
 			std::string command = argv[1];
-
 			if (command == "--demo") {
 				demo(m_tree);
 			}
 			else if (command == "--loop") {
 				mainloop(m_tree);
+			}
+			else if(command == "--play"){
+				std::string input;
+				std::getline(std::cin, input);
+				play(input);
 			}
 			else if (command == "--encoding") {
 				std::string input;
@@ -44,15 +51,27 @@ int main(int argc, char** argv)
 		}
 		else if (argc > 2) {
 			
-			std::string command = argv[1];
+			std::string command_1(argv[1]);
+			std::string command_2(argv[2]);
+
+			if(command_1 == "--play" || command_2 == "--play")
+				is_play = true;
+
+			if(command_1 == "--play")
+				std::swap(command_1,command_2);
+
 			std::string input;
-			for (size_t i = 2; i < argc; i++) {
+			for(size_t i= is_play ? 3 : 2;i<argc;i++)
 				input += std::string(argv[i]) + ' ';
+			
+			if (command_1 == "--encoding") {
+				std::string encoding_value = m_tree.encode(input);
+				std::cout << encoding_value << std::endl;
+				if(is_play){
+					play(encoding_value);
+				}
 			}
-			if (command == "--encoding") {
-				std::cout << m_tree.encode(input) << std::endl;
-			}
-			else if (command == "--decoding") {
+			else if (command_1 == "--decoding") {
 				std::cout << m_tree.decode(input) << std::endl;
 			}
 		}
@@ -75,6 +94,8 @@ void help() {
 	std::cout << "--demo for running and viewing the test" << std::endl << std::endl;
 
 	std::cout << "--loop for application menu running" << std::endl << std::endl;
+
+	std::cout << "--play for voicing a morse code encoded value." << std::endl << std::endl;
 
 	std::cout << "--encoding for encoding, if you enter only one argument as --encoding,"
 		<< "input from standard input is expected."
@@ -168,32 +189,44 @@ void mainloop(const MorseTree& m_tree) {
 	system("cls");
 	bool isFinish = false;
 	char choice;
+	std::string input;
+	std::string output;
 	while (!isFinish) {
 		std::cout << "Morse Alphabet Menu: " << std::endl;
 		std::cout << "1-Encoding" << std::endl;
 		std::cout << "2-Decoding" << std::endl;
-		std::cout << "3-Quit" << std::endl;
+		std::cout << "3-Play" << std::endl;
+		std::cout << "4-Play last output" << std::endl;
+		std::cout << "5-Quit" << std::endl;
 		choice = _getch();
-		std::string input;
-		std::string output;
 
 		switch (choice) {
 		case '1':
 			std::cout << "Please input encoding string" << std::endl;
 			getline(std::cin, input);
-			std::cout << "Encoding String: " << m_tree.encode(input) << std::endl;
+			output = m_tree.encode(input);
+			std::cout << "Encoding String: " << output << std::endl;
 			break;
 		case '2':
 			std::cout << "Please input decoding string" << std::endl;
 			getline(std::cin, input);
 			try {
-				std::cout << "Decoding String: " << m_tree.decode(input) << std::endl;
+				output = m_tree.decode(input);
+				std::cout << "Decoding String: " << output << std::endl;
 			}
 			catch (const std::exception& ex) {
 				std::cout << ex.what() << std::endl;
 			}
 			break;
 		case '3':
+			std::cout << "Please input encoding string for voicing." << std::endl;
+			getline(std::cin, input);
+			play(input);
+			break;
+		case '4':
+			play(output);
+			break;
+		case '5':
 			isFinish = true;
 			std::cout << "Program is closing";
 			break;
@@ -203,5 +236,23 @@ void mainloop(const MorseTree& m_tree) {
 	}
 }
 
+void beep(int sound_time,int sleep_time=0){
+    Beep(523,sound_time);
+    Sleep(sleep_time);
+}
 
-
+void play(const std::string& encoding_value){
+	for(char c : encoding_value){
+		switch(c){
+			case '.':
+			beep(450,300);
+			break;
+			case '-':
+			beep(900,300);
+			break;
+			case ' ':
+			Sleep(300);
+			break;
+		}
+	}
+}
