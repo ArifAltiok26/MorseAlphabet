@@ -14,8 +14,12 @@ public:
 
 class MorseTree {
 	Node* root;
+
+	void clean(Node* node);
 public:
 	MorseTree();
+
+	~MorseTree();
 
 	void insert(char c, std::string path);
 

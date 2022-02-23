@@ -4,6 +4,18 @@ MorseTree::MorseTree() {
 	this->root = new Node;
 }
 
+MorseTree::~MorseTree(){
+	clean(root);
+}
+
+void MorseTree::clean(Node* node){
+	if(node){
+		clean(node->left);
+		clean(node->right);
+		delete node;
+	}
+}
+
 void MorseTree::insert(char c, std::string path) {
 	Node* temp = root;
 	for (size_t i = 0; i < path.length(); i++) {

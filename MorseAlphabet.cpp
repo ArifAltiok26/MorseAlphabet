@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 				std::swap(command_1,command_2);
 
 			std::string input;
-			for(size_t i= is_play ? 3 : 2;i<argc;i++)
+			for(size_t i= is_play ? 3 : 2;i < argc; i++)
 				input += std::string(argv[i]) + ' ';
 			
 			if (command_1 == "--encoding") {
