@@ -9,7 +9,7 @@ set(CompilerFlags
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 FILE(
     GLOB MorseAlphabet_Files
-    ${CMAKE_CURRENT_SOURCE_DIR}/MorseAlphabet.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp
 )

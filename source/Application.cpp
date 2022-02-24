@@ -1,85 +1,10 @@
-﻿#include <iostream>
+#include "Application.h"
+#include <iostream>
 #include <string>
 #include <conio.h>
-#include "MorseTree.h"
 #include "windows.h"
 
-void help();
-MorseTree init_morse_alphabet();
-void demo(const MorseTree& m_tree);
-void mainloop(const MorseTree& m_tree);
-void beep();
-void play(const std::string& encoding_value);
-
-int main(int argc, char** argv)
-{
-	bool is_play=false;
-	if (argc == 1 || (argc == 2 && strcmp("--help", argv[1]) == 0))
-		help();
-	else {
-		MorseTree m_tree;
-		try {
-			m_tree = init_morse_alphabet();
-		}
-		catch (const std::exception& ex) {
-			std::cout << ex.what() << std::endl;
-			return -1;
-		}
-		if (argc == 2) {
-			std::string command = argv[1];
-			if (command == "--demo") {
-				demo(m_tree);
-			}
-			else if (command == "--loop") {
-				mainloop(m_tree);
-			}
-			else if(command == "--play"){
-				std::string input;
-				std::getline(std::cin, input);
-				play(input);
-			}
-			else if (command == "--encoding") {
-				std::string input;
-				std::getline(std::cin, input);
-				std::cout << m_tree.encode(input) << std::endl;
-			}
-			else if (command == "--decoding") {
-				std::string input;
-				std::getline(std::cin, input);
-				std::cout << m_tree.decode(input) << std::endl;
-			}
-		}
-		else if (argc > 2) {
-			
-			std::string command_1(argv[1]);
-			std::string command_2(argv[2]);
-
-			if(command_1 == "--play" || command_2 == "--play")
-				is_play = true;
-
-			if(command_1 == "--play")
-				std::swap(command_1,command_2);
-
-			std::string input;
-			for(size_t i= is_play ? 3 : 2;i < argc; i++)
-				input += std::string(argv[i]) + ' ';
-			
-			if (command_1 == "--encoding") {
-				std::string encoding_value = m_tree.encode(input);
-				std::cout << encoding_value << std::endl;
-				if(is_play){
-					play(encoding_value);
-				}
-			}
-			else if (command_1 == "--decoding") {
-				std::cout << m_tree.decode(input) << std::endl;
-			}
-		}
-	}
-	return 0;
-}
-
-void help() {
+void Application::help()const {
 	std::cout << "Welcome to the Morse Code App. Here is the app's help menu." << std::endl << std::endl;
 	std::cout << "First of all, the purpose of this application is to encode and decode any text with morse code rules."
 		<< " If you want to learn more about Morse code, please visit https ://en.wikipedia.org/wiki/Morse_code." << std::endl << std::endl;
@@ -114,7 +39,7 @@ void help() {
 		<< std::endl;
 }
 
-MorseTree init_morse_alphabet() {
+MorseTree Application::init_morse_alphabet() {
 	MorseTree m_tree;
 
 	m_tree.insert('a', ".-");
@@ -175,7 +100,7 @@ MorseTree init_morse_alphabet() {
 	return m_tree;
 }
 
-void demo(const MorseTree& m_tree) {
+void Application::demo()const {
 	std::string input = "This is a test text. 1234567890";
 	std::cout << "Input: " << input << std::endl;
 	std::cout << std::endl;
@@ -185,7 +110,7 @@ void demo(const MorseTree& m_tree) {
 	std::cout << "Decoding result: " << m_tree.decode(encode_str) << std::endl;
 }
 
-void mainloop(const MorseTree& m_tree) {
+void Application::mainloop() const{
 	system("cls");
 	bool isFinish = false;
 	char choice;
@@ -236,12 +161,12 @@ void mainloop(const MorseTree& m_tree) {
 	}
 }
 
-void beep(int sound_time,int sleep_time=0){
+void Application::beep(int sound_time,int sleep_time)const{
     Beep(523,sound_time);
     Sleep(sleep_time);
 }
 
-void play(const std::string& encoding_value){
+void Application::play(const std::string& encoding_value)const{
 	for(char c : encoding_value){
 		switch(c){
 			case '.':
@@ -253,6 +178,71 @@ void play(const std::string& encoding_value){
 			case ' ':
 			Sleep(300);
 			break;
+		}
+	}
+}
+
+void Application::run(int argc,char** argv){
+    bool is_play=false;
+	if (argc == 1 || (argc == 2 && strcmp("--help", argv[1]) == 0))
+		help();
+	else {
+		try {
+			m_tree = init_morse_alphabet();
+		}
+		catch (const std::exception& ex) {
+			std::cout << ex.what() << std::endl;
+			exit(-1);
+		}
+		if (argc == 2) {
+			std::string command = argv[1];
+			if (command == "--demo") {
+				demo();
+			}
+			else if (command == "--loop") {
+				mainloop();
+			}
+			else if(command == "--play"){
+				std::string input;
+				std::getline(std::cin, input);
+				play(input);
+			}
+			else if (command == "--encoding") {
+				std::string input;
+				std::getline(std::cin, input);
+				std::cout << m_tree.encode(input) << std::endl;
+			}
+			else if (command == "--decoding") {
+				std::string input;
+				std::getline(std::cin, input);
+				std::cout << m_tree.decode(input) << std::endl;
+			}
+		}
+		else if (argc > 2) {
+			
+			std::string command_1(argv[1]);
+			std::string command_2(argv[2]);
+
+			if(command_1 == "--play" || command_2 == "--play")
+				is_play = true;
+
+			if(command_1 == "--play")
+				std::swap(command_1,command_2);
+
+			std::string input;
+			for(size_t i= is_play ? 3 : 2;i < argc; i++)
+				input += std::string(argv[i]) + ' ';
+			
+			if (command_1 == "--encoding") {
+				std::string encoding_value = m_tree.encode(input);
+				std::cout << encoding_value << std::endl;
+				if(is_play){
+					play(encoding_value);
+				}
+			}
+			else if (command_1 == "--decoding") {
+				std::cout << m_tree.decode(input) << std::endl;
+			}
 		}
 	}
 }
